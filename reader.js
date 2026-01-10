@@ -176,3 +176,42 @@ textSizeSelect.onchange = () => {
   hanziDiv.style.fontSize = textSizeSelect.value + "px";
   engDiv.style.fontSize = textSizeSelect.value + "px";
 };
+
+
+const urlInput = document.getElementById("url-input");
+const importButton = document.getElementById("import-button");
+
+// ------------------
+// Import text from website
+// ------------------
+importButton.onclick = async () => {
+  const url = urlInput.value.trim();
+  if(!url) return;
+
+  engDiv.innerHTML = "Fetching text…";
+
+  try {
+    const resp = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+    const data = await resp.json();
+    const html = data.contents;
+
+    // Create a temporary DOM to parse HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    // Extract text paragraphs only
+    const paragraphs = Array.from(doc.querySelectorAll("p"))
+      .map(p => p.innerText.trim())
+      .filter(t => t.length > 0);
+
+    const text = paragraphs.join("\n\n"); // preserve paragraph breaks
+
+    input.value = text;  // put in main input
+    render(text);        // render in reader
+    const translations = await translateText(text);
+    renderTranslation(translations);
+  } catch(e){
+    console.error("Failed to fetch text", e);
+    engDiv.innerHTML = "Failed to fetch text from the website.";
+  }
+};
