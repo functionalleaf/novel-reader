@@ -5,14 +5,18 @@ const hanziDiv = document.getElementById("hanzi");
 const engDiv = document.getElementById("english");
 const tooltip = document.getElementById("tooltip");
 const reader = document.getElementById("reader");
+const settingsButton = document.getElementById("settings-button");
+const settingsMenu = document.getElementById("settings-menu");
+const darkModeToggle = document.getElementById("darkmode-toggle");
+const textSizeSelect = document.getElementById("textsize-select");
 
-hanziDiv.style.whiteSpace = "pre-wrap"; // preserve all original line breaks and spacing
+hanziDiv.style.whiteSpace = "pre-wrap"; // preserve all line breaks
 
 document.getElementById("render").onclick = async () => {
   const text = input.value;
   render(text); // preserve text exactly
   const translations = await translateText(text);
-  engDiv.innerHTML = "<b>Translation:</b><br>" + translations.join("<br>");
+  renderTranslation(translations);
 };
 
 document.getElementById("fullscreen").onclick = () => reader.classList.toggle("fullscreen");
@@ -49,7 +53,6 @@ function convertPinyin(pinyin){
 // Segment text for hover only
 // ------------------
 function segment(text){
-  // returns array of {text, entry} for hover
   const segs = [];
   let i = 0;
   while(i < text.length){
@@ -75,7 +78,7 @@ function segment(text){
 function render(text){
   hanziDiv.innerHTML = "";
 
-  const lines = text.split(/\r?\n/); // preserve line breaks
+  const lines = text.split(/\r?\n/);
 
   lines.forEach(line => {
     const segs = segment(line);
@@ -86,7 +89,8 @@ function render(text){
 
       if(segObj.entry){
         span.onmouseenter = e => {
-          tooltip.innerHTML = `<b>${convertPinyin(segObj.entry.pinyin)}</b><br>${segObj.entry.english}`;
+          const defs = segObj.entry.english.split("/").filter(d => d.trim() !== "");
+          tooltip.innerHTML = `<b>${convertPinyin(segObj.entry.pinyin)}</b><br><ul>${defs.map(d => `<li>${d}</li>`).join("")}</ul>`;
           tooltip.style.display = "block";
         };
         span.onmousemove = e => {
@@ -99,7 +103,19 @@ function render(text){
       hanziDiv.appendChild(span);
     });
 
-    hanziDiv.appendChild(document.createElement("br")); // preserve even empty lines
+    hanziDiv.appendChild(document.createElement("br"));
+  });
+}
+
+// ------------------
+// Render translations nicely
+// ------------------
+function renderTranslation(translations){
+  engDiv.innerHTML = "<b>Translation:</b><br>";
+  translations.forEach(t => {
+    const p = document.createElement("p");
+    p.textContent = t;
+    engDiv.appendChild(p);
   });
 }
 
@@ -107,7 +123,7 @@ function render(text){
 // Translate full text via API
 // ------------------
 async function translateText(text){
-  const sentences = text.split(/(?<=[。！？])/); // keep punctuation attached
+  const sentences = text.split(/(?<=[。！？])/);
   const translations = [];
   for(const sentence of sentences){
     if(sentence.trim().length === 0) continue;
@@ -126,3 +142,21 @@ async function translateText(text){
   }
   return translations;
 }
+
+// ------------------
+// Settings menu
+// ------------------
+settingsButton.onclick = () => settingsMenu.classList.toggle("open");
+
+darkModeToggle.onchange = () => {
+  if(darkModeToggle.checked){
+    document.body.classList.add("darkmode");
+  } else {
+    document.body.classList.remove("darkmode");
+  }
+};
+
+textSizeSelect.onchange = () => {
+  hanziDiv.style.fontSize = textSizeSelect.value + "px";
+  engDiv.style.fontSize = textSizeSelect.value + "px";
+};

@@ -85,3 +85,18 @@ textarea {
   overflow:auto;
   z-index:999;
 }
+#settings-menu {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 20px;
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+}
+#settings-menu.open { display: block; }
+
+.darkmode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
