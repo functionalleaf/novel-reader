@@ -6,6 +6,8 @@ const engDiv = document.getElementById("english");
 const tooltip = document.getElementById("tooltip");
 const reader = document.getElementById("reader");
 
+hanziDiv.style.whiteSpace = "pre-wrap"; // preserve all original line breaks and spacing
+
 document.getElementById("render").onclick = async () => {
   const text = input.value;
   render(text); // preserve text exactly
@@ -72,11 +74,10 @@ function segment(text){
 // ------------------
 function render(text){
   hanziDiv.innerHTML = "";
-  hanziDiv.style.whiteSpace = "pre-wrap"; // preserve spaces, tabs, line breaks
 
-  const lines = text.split(/\r?\n/);
+  const lines = text.split(/\r?\n/); // preserve line breaks
 
-  lines.forEach((line, lineIndex) => {
+  lines.forEach(line => {
     const segs = segment(line);
 
     segs.forEach(segObj => {
@@ -98,11 +99,10 @@ function render(text){
       hanziDiv.appendChild(span);
     });
 
-    if(lineIndex < lines.length - 1){
-      hanziDiv.appendChild(document.createElement("br"));
-    }
+    hanziDiv.appendChild(document.createElement("br")); // preserve even empty lines
   });
 }
+
 // ------------------
 // Translate full text via API
 // ------------------
