@@ -72,28 +72,36 @@ function segment(text){
 // ------------------
 function render(text){
   hanziDiv.innerHTML = "";
-  const segs = segment(text);
 
-  segs.forEach(segObj => {
-    const span = document.createElement("span");
-    span.textContent = segObj.text;
+  const lines = text.split(/\r?\n/); // preserve line breaks
 
-    if(segObj.entry){
-      span.onmouseenter = e => {
-        tooltip.innerHTML = `<b>${convertPinyin(segObj.entry.pinyin)}</b><br>${segObj.entry.english}`;
-        tooltip.style.display = "block";
-      };
-      span.onmousemove = e => {
-        tooltip.style.left = e.pageX + 12 + "px";
-        tooltip.style.top = e.pageY + 12 + "px";
-      };
-      span.onmouseleave = () => tooltip.style.display="none";
+  lines.forEach((line, lineIndex) => {
+    const segs = segment(line);
+
+    segs.forEach(segObj => {
+      const span = document.createElement("span");
+      span.textContent = segObj.text;
+
+      if(segObj.entry){
+        span.onmouseenter = e => {
+          tooltip.innerHTML = `<b>${convertPinyin(segObj.entry.pinyin)}</b><br>${segObj.entry.english}`;
+          tooltip.style.display = "block";
+        };
+        span.onmousemove = e => {
+          tooltip.style.left = e.pageX + 12 + "px";
+          tooltip.style.top = e.pageY + 12 + "px";
+        };
+        span.onmouseleave = () => tooltip.style.display="none";
+      }
+
+      hanziDiv.appendChild(span);
+    });
+
+    if(lineIndex < lines.length - 1){
+      hanziDiv.appendChild(document.createElement("br")); // add line break
     }
-
-    hanziDiv.appendChild(span);
   });
 }
-
 // ------------------
 // Translate full text via API
 // ------------------
