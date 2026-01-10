@@ -123,12 +123,45 @@ function render(text){
 // ------------------
 // Render translation
 // ------------------
-function renderTranslation(translations){
-  engDiv.innerHTML = "<b>Translation:</b><br>";
-  translations.forEach(t=>{
-    const p = document.createElement("p");
-    p.textContent = t;
-    engDiv.appendChild(p);
+// ------------------
+// Render text
+// ------------------
+function render(text){
+  hanziDiv.innerHTML = "";
+  const lines = text.split(/\r?\n/);
+
+  lines.forEach(line => {
+    const segs = segment(line);
+    segs.forEach(segObj => {
+      const span = document.createElement("span");
+      span.textContent = segObj.text;
+
+      if(segObj.entry){
+        span.onmouseenter = e => {
+          const defs = segObj.entry.english.split("/").filter(d=>d.trim()!=="").map((d,i)=>{
+            // detect "中文 [pinyin]" pattern anywhere in the definition
+            const match = d.match(/^([\u4e00-\u9fff\s]+)?\s*\[([a-zü0-9\s]+)\]?$/i);
+            if(match){
+              const hanziPart = match[1] ? match[1].trim() : "";
+              const pinyinPart = match[2] ? convertPinyin(match[2].trim()) : "";
+              return `${i+1}. ${hanziPart}${pinyinPart ? " ["+pinyinPart+"]" : ""}`;
+            } else {
+              return `${i+1}. ${d}`;
+            }
+          });
+          tooltip.innerHTML = `<b>${convertPinyin(segObj.entry.pinyin)}</b><br>${defs.join("<br>")}`;
+          tooltip.style.display = "block";
+        };
+        span.onmousemove = e => {
+          tooltip.style.left = e.pageX + 12 + "px";
+          tooltip.style.top = e.pageY + 12 + "px";
+        };
+        span.onmouseleave = () => tooltip.style.display = "none";
+      }
+
+      hanziDiv.appendChild(span);
+    });
+    hanziDiv.appendChild(document.createElement("br"));
   });
 }
 
