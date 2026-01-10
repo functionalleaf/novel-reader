@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Novel Reader</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Novel Reader</h1>
+<textarea id="input" placeholder="Paste Chinese text here"></textarea>
+<div class="controls">
+  <button id="render">Render</button>
+  <button id="fullscreen">Fullscreen</button>
+</div>
+
+<div id="reader">
+  <div id="hanzi"></div>
+  <div id="english"></div>
+</div>
+
+<div id="tooltip"></div>
+
+<script src="cedict.js"></script>
+<script src="reader.js"></script>
+</body>
+</html>
