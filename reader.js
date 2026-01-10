@@ -5,10 +5,15 @@ const hanziDiv = document.getElementById("hanzi");
 const engDiv = document.getElementById("english");
 const tooltip = document.getElementById("tooltip");
 const reader = document.getElementById("reader");
+
 const settingsButton = document.getElementById("settings-button");
 const settingsMenu = document.getElementById("settings-menu");
 const darkModeToggle = document.getElementById("darkmode-toggle");
 const textSizeSelect = document.getElementById("textsize-select");
+const fontSelect = document.getElementById("font-select");
+
+const urlInput = document.getElementById("url-input");
+const importButton = document.getElementById("import-button");
 
 hanziDiv.style.whiteSpace = "pre-wrap";
 
@@ -43,7 +48,7 @@ function convertPinyin(pinyin){
       if(!m) return syl;
       let [_, core, tone] = m;
       tone = parseInt(tone);
-      if(tone === 5) return core; // tone 5/neutral: remove number
+      if(tone === 5) return core; // neutral tone: remove number
       tone -= 1;
       for(const vow of ["a","e","o","i","u","ü"]){
         if(core.includes(vow)){
@@ -97,13 +102,13 @@ function render(text){
           const defs = segObj.entry.english
             .split("/")
             .filter(d => d.trim() !== "")
-            .map(d => {
+            .map((d,i) => {
               // detect "中文 pinyin" pattern
               const match = d.match(/^([\u4e00-\u9fff]+)\s*\[([a-zü0-9\s]+)\]$/i);
               if(match){
-                return `- ${match[1]} [${convertPinyin(match[2])}]`;
+                return `${i+1}. ${match[1]} [${convertPinyin(match[2])}]`;
               } else {
-                return `- ${d}`;
+                return `${i+1}. ${d}`;
               }
             });
           tooltip.innerHTML = `<b>${convertPinyin(segObj.entry.pinyin)}</b><br>${defs.join("<br>")}`;
@@ -177,9 +182,10 @@ textSizeSelect.onchange = () => {
   engDiv.style.fontSize = textSizeSelect.value + "px";
 };
 
-
-const urlInput = document.getElementById("url-input");
-const importButton = document.getElementById("import-button");
+fontSelect.onchange = () => {
+  hanziDiv.style.fontFamily = fontSelect.value;
+  engDiv.style.fontFamily = fontSelect.value;
+};
 
 // ------------------
 // Import text from website
@@ -195,19 +201,17 @@ importButton.onclick = async () => {
     const data = await resp.json();
     const html = data.contents;
 
-    // Create a temporary DOM to parse HTML
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
 
-    // Extract text paragraphs only
     const paragraphs = Array.from(doc.querySelectorAll("p"))
       .map(p => p.innerText.trim())
       .filter(t => t.length > 0);
 
-    const text = paragraphs.join("\n\n"); // preserve paragraph breaks
+    const text = paragraphs.join("\n\n");
 
-    input.value = text;  // put in main input
-    render(text);        // render in reader
+    input.value = text;
+    render(text);
     const translations = await translateText(text);
     renderTranslation(translations);
   } catch(e){

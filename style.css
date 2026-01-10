@@ -1,32 +1,76 @@
+/* ------------------ */
+/* General body & textarea */
+/* ------------------ */
 body {
-  font-family: sans-serif;
+  font-family: system-ui, sans-serif;
   padding: 20px;
+  background: #fafafa;
   line-height: 1.6;
+  color: #111;
+  transition: background 0.3s, color 0.3s;
 }
 
+textarea {
+  width: 100%;
+  height: 120px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* ------------------ */
+/* Controls & Settings */
+/* ------------------ */
+.controls {
+  margin: 10px 0;
+  position: relative;
+}
+
+#settings-menu {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 500;
+}
+
+#settings-menu.open {
+  display: block;
+}
+
+/* ------------------ */
+/* Reader area */
+/* ------------------ */
 #reader {
   max-width: 800px;
   margin: auto;
   position: relative;
 }
 
-textarea {
-  width: 100%;
-  font-size: 16px;
-  margin-bottom: 10px;
+#hanzi {
+  font-size: 28px;
+  line-height: 1.6;
+  margin-bottom: 14px;
 }
 
-.line span {
+#hanzi span {
   cursor: pointer;
+  margin-right: 4px;
   border-bottom: 1px dotted #888;
 }
 
-.translation {
-  margin-left: 10px;
-  color: #444;
-  margin-bottom: 10px;
+#english {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #555;
+  margin-top: 10px;
 }
 
+/* Translation block inside fullscreen */
 #reader.fullscreen .translation {
   position: fixed;
   top: 0;
@@ -37,66 +81,60 @@ textarea {
   overflow: auto;
   z-index: 9999;
   padding: 20px;
-}body {
-  font-family: system-ui;
-  padding: 20px;
-  background:#fafafa;
 }
 
-textarea {
-  width:100%;
-  height:120px;
-  font-size:18px;
-}
-
-.controls {
-  margin: 10px 0;
-}
-
-#hanzi span {
-  font-size:28px;
-  margin-right:4px;
-  cursor:pointer;
-}
-
-#english {
-  margin-top:14px;
-  font-size:18px;
-  color:#555;
-  line-height:1.5;
-}
-
-#tooltip {
-  position:absolute;
-  display:none;
-  background:#111;
-  color:white;
-  padding:8px 10px;
-  border-radius:8px;
-  font-size:14px;
-  z-index:1000;
-}
-
+/* ------------------ */
+/* Fullscreen mode */
+/* ------------------ */
 .fullscreen {
   position: fixed;
   inset: 0;
-  background:white;
-  padding:40px;
-  overflow:auto;
-  z-index:999;
+  background: white;
+  padding: 40px;
+  overflow: auto;
+  z-index: 999;
 }
-#settings-menu {
-  display: none;
-  position: absolute;
-  top: 40px;
-  right: 20px;
-  background: #f0f0f0;
-  padding: 10px;
-  border-radius: 5px;
-}
-#settings-menu.open { display: block; }
 
+/* ------------------ */
+/* Tooltip styling */
+/* ------------------ */
+#tooltip {
+  position: absolute;
+  display: none;
+  background: #111;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 1000;
+  pointer-events: none;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+/* ------------------ */
+/* Dark mode overrides */
+/* ------------------ */
 .darkmode {
   background-color: #121212;
   color: #f0f0f0;
+}
+
+.darkmode #settings-menu {
+  background-color: #333;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+.darkmode #reader, 
+.darkmode #hanzi, 
+.darkmode #english {
+  background-color: #222;
+  color: #eee;
+  border-color: #555;
+}
+
+.darkmode #tooltip {
+  background-color: #333;
+  color: #fff;
 }
