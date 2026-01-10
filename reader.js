@@ -72,8 +72,9 @@ function segment(text){
 // ------------------
 function render(text){
   hanziDiv.innerHTML = "";
+  hanziDiv.style.whiteSpace = "pre-wrap"; // preserve spaces, tabs, line breaks
 
-  const lines = text.split(/\r?\n/); // preserve line breaks
+  const lines = text.split(/\r?\n/);
 
   lines.forEach((line, lineIndex) => {
     const segs = segment(line);
@@ -98,7 +99,7 @@ function render(text){
     });
 
     if(lineIndex < lines.length - 1){
-      hanziDiv.appendChild(document.createElement("br")); // add line break
+      hanziDiv.appendChild(document.createElement("br"));
     }
   });
 }
