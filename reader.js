@@ -9,6 +9,7 @@ const settingsButton = document.getElementById("settings-button");
 const settingsMenu = document.getElementById("settings-menu");
 const darkModeToggle = document.getElementById("darkmode-toggle");
 const textSizeSelect = document.getElementById("textsize-select");
+const hanziFontSelect = document.getElementById("hanzi-font-select");
 const urlInput = document.getElementById("url-input");
 const importButton = document.getElementById("import-button");
 
@@ -174,6 +175,11 @@ textSizeSelect.onchange = () => {
   engDiv.style.fontSize = size;
 };
 
+hanziFontSelect.onchange = () => {
+  const font = hanziFontSelect.value;
+  hanziDiv.style.fontFamily = font;
+};
+
 // ------------------
 // Import text from URL
 // ------------------
@@ -188,7 +194,15 @@ importButton.onclick = async () => {
     const data = await resp.json();
     const parser = new DOMParser();
     const doc = parser.parseFromString(data.contents, "text/html");
-    const paragraphs = Array.from(doc.querySelectorAll("p")).map(p=>p.innerText.trim()).filter(t=>t.length>0);
+    const paragraphs = Array.from(doc.querySelectorAll("p"))
+      .map(p => p.innerText.trim())
+      .filter(t => t.length > 0);
+
+    if(paragraphs.length === 0){
+      engDiv.innerHTML = "No text found on this page.";
+      return;
+    }
+
     const text = paragraphs.join("\n\n");
     input.value = text;
     render(text);

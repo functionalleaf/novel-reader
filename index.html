@@ -9,16 +9,7 @@
 
 <h1>Novel Reader</h1>
 
-<div id="import-section">
-  <input type="text" id="url-input" placeholder="Enter website URL">
-  <button id="import-button">Import from URL</button>
-</div>
-
-<textarea id="input" placeholder="Paste Chinese text here"></textarea>
-
-<div class="controls">
-  <button id="render">Render</button>
-  <button id="fullscreen">Fullscreen</button>
+<div class="controls-wrapper">
   <button id="settings-button">⚙ Settings</button>
   <div id="settings-menu" class="menu">
     <label><input type="checkbox" id="darkmode-toggle"> Dark Mode</label><br>
@@ -30,15 +21,28 @@
         <option value="24">24px</option>
       </select>
     </label><br>
-    <label>Font: 
-      <select id="font-select">
-        <option value="Arial" selected>Arial</option>
-        <option value="Times New Roman">Times New Roman</option>
-        <option value="SimSun">SimSun (宋体)</option>
-        <option value="Noto Sans SC">Noto Sans SC</option>
+    <label>Hanzi font:
+      <select id="hanzi-font-select">
+        <option value="Noto Sans SC" selected>Noto Sans SC</option>
+        <option value="Microsoft YaHei">Microsoft YaHei</option>
+        <option value="SimSun">SimSun</option>
+        <option value="KaiTi">KaiTi</option>
+        <option value="STHeiti">STHeiti</option>
       </select>
     </label>
   </div>
+</div>
+
+<div id="import-section">
+  <input type="text" id="url-input" placeholder="Enter website URL">
+  <button id="import-button">Import from URL</button>
+</div>
+
+<textarea id="input" placeholder="Paste Chinese text here"></textarea>
+
+<div class="controls">
+  <button id="render">Render</button>
+  <button id="fullscreen">Fullscreen</button>
 </div>
 
 <div id="reader">
