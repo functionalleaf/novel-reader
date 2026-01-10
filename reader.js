@@ -10,11 +10,14 @@ const settingsMenu = document.getElementById("settings-menu");
 const darkModeToggle = document.getElementById("darkmode-toggle");
 const textSizeSelect = document.getElementById("textsize-select");
 
-hanziDiv.style.whiteSpace = "pre-wrap"; // preserve all line breaks
+hanziDiv.style.whiteSpace = "pre-wrap";
 
+// ------------------
+// Render button
+// ------------------
 document.getElementById("render").onclick = async () => {
   const text = input.value;
-  render(text); // preserve text exactly
+  render(text);
   const translations = await translateText(text);
   renderTranslation(translations);
 };
@@ -36,10 +39,12 @@ function convertPinyin(pinyin){
   return pinyin
     .split(' ')
     .map(syl => {
-      const m = syl.match(/^([a-zü]+)([1-4])$/i);
+      const m = syl.match(/^([a-zü]+)([1-5])$/i);
       if(!m) return syl;
       let [_, core, tone] = m;
-      tone = parseInt(tone)-1;
+      tone = parseInt(tone);
+      if(tone === 5) return core; // tone 5/neutral: remove number
+      tone -= 1;
       for(const vow of ["a","e","o","i","u","ü"]){
         if(core.includes(vow)){
           return core.replace(vow, toneMap[vow][tone]);
@@ -89,8 +94,19 @@ function render(text){
 
       if(segObj.entry){
         span.onmouseenter = e => {
-          const defs = segObj.entry.english.split("/").filter(d => d.trim() !== "");
-          tooltip.innerHTML = `<b>${convertPinyin(segObj.entry.pinyin)}</b><br><ul>${defs.map(d => `<li>${d}</li>`).join("")}</ul>`;
+          const defs = segObj.entry.english
+            .split("/")
+            .filter(d => d.trim() !== "")
+            .map(d => {
+              // detect "中文 pinyin" pattern
+              const match = d.match(/^([\u4e00-\u9fff]+)\s*\[([a-zü0-9\s]+)\]$/i);
+              if(match){
+                return `- ${match[1]} [${convertPinyin(match[2])}]`;
+              } else {
+                return `- ${d}`;
+              }
+            });
+          tooltip.innerHTML = `<b>${convertPinyin(segObj.entry.pinyin)}</b><br>${defs.join("<br>")}`;
           tooltip.style.display = "block";
         };
         span.onmousemove = e => {
