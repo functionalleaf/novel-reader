@@ -1,6 +1,3 @@
-/* ------------------ */
-/* General body & textarea */
-/* ------------------ */
 body {
   font-family: system-ui, sans-serif;
   padding: 20px;
@@ -19,9 +16,6 @@ textarea {
   box-sizing: border-box;
 }
 
-/* ------------------ */
-/* Controls & Settings */
-/* ------------------ */
 .controls {
   margin: 10px 0;
   position: relative;
@@ -33,6 +27,7 @@ textarea {
   top: 40px;
   right: 0;
   background: #f0f0f0;
+  color: #111;
   padding: 10px;
   border-radius: 5px;
   z-index: 500;
@@ -42,9 +37,6 @@ textarea {
   display: block;
 }
 
-/* ------------------ */
-/* Reader area */
-/* ------------------ */
 #reader {
   max-width: 800px;
   margin: auto;
@@ -52,14 +44,15 @@ textarea {
 }
 
 #hanzi {
-  font-size: 28px;
   line-height: 1.6;
   margin-bottom: 14px;
+  white-space: pre-wrap;
 }
 
 #hanzi span {
-  cursor: pointer;
+  font-size: 28px;
   margin-right: 4px;
+  cursor: pointer;
   border-bottom: 1px dotted #888;
 }
 
@@ -70,34 +63,6 @@ textarea {
   margin-top: 10px;
 }
 
-/* Translation block inside fullscreen */
-#reader.fullscreen .translation {
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: #fff;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  z-index: 9999;
-  padding: 20px;
-}
-
-/* ------------------ */
-/* Fullscreen mode */
-/* ------------------ */
-.fullscreen {
-  position: fixed;
-  inset: 0;
-  background: white;
-  padding: 40px;
-  overflow: auto;
-  z-index: 999;
-}
-
-/* ------------------ */
-/* Tooltip styling */
-/* ------------------ */
 #tooltip {
   position: absolute;
   display: none;
@@ -112,9 +77,20 @@ textarea {
   line-height: 1.4;
 }
 
-/* ------------------ */
-/* Dark mode overrides */
-/* ------------------ */
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit; /* will inherit darkmode */
+  color: inherit;
+  padding: 40px;
+  overflow: auto;
+  z-index: 999;
+}
+
+/* Dark mode */
 .darkmode {
   background-color: #121212;
   color: #f0f0f0;
@@ -126,12 +102,17 @@ textarea {
   border: 1px solid #555;
 }
 
-.darkmode #reader, 
-.darkmode #hanzi, 
-.darkmode #english {
+.darkmode #reader {
   background-color: #222;
   color: #eee;
-  border-color: #555;
+}
+
+.darkmode #hanzi span {
+  color: #eee;
+}
+
+.darkmode #english {
+  color: #ddd;
 }
 
 .darkmode #tooltip {
